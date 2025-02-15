@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sppq</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+    <style>
+        :root {
+            --primary-color: #00ffd5;
+            --bg-color: #0f172a;
+            --text-color: #94a3b8;
+            --heading-color: #e2e8f0;
+            --nav-height: 70px;
+            --card-bg: #1e293b;
+            --hover-color: rgba(0, 255, 213, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Стили для интерактивных элементов */
+        a, button, .cta-button, .project-link, .social-link, .logo, .nav-links a {
+            cursor: pointer;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Улучшенный интерактивный фон */
+        .background-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(0, 255, 213, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 255, 213, 0.05) 0%, transparent 25%);
+            animation: backgroundPulse 8s ease-in-out infinite;
+            filter: blur(50px);
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .background-wrapper::before,
+        .background-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 65vmax;
+            height: 65vmax;
+            background: linear-gradient(
+                45deg,
+                rgba(0, 255, 213, 0.05) 0%,
+                rgba(0, 255, 213, 0.08) 50%,
+                rgba(0, 255, 213, 0.05) 100%
+            );
+            border-radius: 47% 53% 61% 39% / 45% 51% 49% 55%;
+            animation: blobMove 25s infinite;
+            transition: transform 0.5s ease;
+        }
+
+        .background-wrapper::after {
+            animation-delay: -12.5s;
+            animation-duration: 20s;
+            background: linear-gradient(
+                -45deg,
+                rgba(0, 255, 213, 0.06) 0%,
+                rgba(0, 255, 213, 0.09) 50%,
+                rgba(0, 255, 213, 0.06) 100%
+            );
+        }
+
+        @keyframes blobMove {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(150px, -100px) rotate(120deg) scale(1.2); }
+            66% { transform: translate(-100px, 150px) rotate(240deg) scale(0.8); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--heading-color);
+            line-height: 1.2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        nav {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--heading-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Стили для кнопки смены языка */
+        .language-switcher {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .language-switcher:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: var(--nav-height);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .wakatime-badge {
+            margin-bottom: 1rem;
+            display: block;
+            transform: scale(0.35);
+            transform-origin: left;
+            opacity: 0.85;
+            filter: brightness(1.5) contrast(1.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .wakatime-badge::before {
+            content: 'Время разработки:';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            white-space: nowrap;
+            transform: scale(2.8);
+            opacity: 0.8;
+        }
+
+        .wakatime-badge:hover {
+            opacity: 1;
+            filter: brightness(1.8) contrast(1.4);
+        }
+
+        .hero-subtitle {
+            color: var(--primary-color);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            width: auto;
+            opacity: 1 !important;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            background: linear-gradient(120deg, var(--heading-color), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient 8s ease infinite;
+            margin-top: 0;
+            opacity: 1 !important;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        /* Улучшенные кнопки и ссылки */
+        .cta-button, .project-link {
+            --glow-strength: 0;
+            --rotation-x: 0deg;
+            --rotation-y: 0deg;
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(120deg, transparent 0%, var(--hover-color) 50%, transparent 100%);
+            background-size: 200% 100%;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 5px 15px rgba(0, 255, 213, 0.1),
+                0 0 calc(var(--glow-strength) * 20px) rgba(0, 255, 213, calc(var(--glow-strength) * 0.5));
+            transform-style: preserve-3d;
+            transform:
+                perspective(1000px)
+                rotateX(var(--rotation-x))
+                rotateY(var(--rotation-y));
+        }
+
+        .project-link {
+            padding: 0.5rem 1rem;
+            border-width: 1px;
+        }
+
+        .cta-button::before, .project-link::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(0, 255, 213, calc(var(--glow-strength) * 0.3)) 0%,
+                transparent 100%
+            );
+            opacity: var(--glow-strength);
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        .cta-button:hover, .project-link:hover {
+            background-position: right center;
+            transform:
+                perspective(1000px)
+                rotateX(var(--rotation-x))
+                rotateY(var(--rotation-y))
+                translateZ(10px);
+            letter-spacing: 1px;
+        }
+
+        .cta-button:active, .project-link:active {
+            transform:
+                perspective(1000px)
+                rotateX(calc(var(--rotation-x) * 0.5))
+                rotateY(calc(var(--rotation-y) * 0.5))
+                translateZ(5px)
+                scale(0.98);
+            box-shadow: 0 2px 10px rgba(0, 255, 213, 0.1);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--text-color);
+            opacity: 0.3;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Улучшенные карточки проектов */
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(145deg, var(--card-bg), rgba(30, 41, 59, 0.7));
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .project-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(0, 255, 213, 0.15) 0%,
+                transparent 50%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .project-card:hover::after {
+            opacity: 1;
+        }
+
+        .project-title {
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .project-card:hover .project-title {
+            transform: translateY(-2px);
+            color: var(--primary-color);
+        }
+
+        .project-description {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .project-description.typed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .project-description::after {
+            content: '|';
+            display: inline-block;
+            margin-left: 2px;
+            opacity: 0;
+            animation: blink 1s step-end infinite;
+        }
+
+        .project-description.typed::after {
+            opacity: 1;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .project-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .project-link:hover {
+            color: var(--heading-color);
+            transform: translateY(-2px);
+            transition-duration: 0.2s;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            perspective: 1000px;
+        }
+
+        /* Улучшенные социальные ссылки */
+        .social-link {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--card-bg), rgba(30, 41, 59, 0.7));
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            will-change: transform;
+        }
+
+        .social-link:hover,
+        .social-link.scale-up {
+            transform: scale(1.4);
+            box-shadow: 0 8px 25px rgba(0, 255, 213, 0.3);
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(0, 255, 213, 0.3) 0%,
+                transparent 70%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            filter: blur(5px);
+        }
+
+        .social-link:hover::before {
+            opacity: 1;
+        }
+
+        .social-link img {
+            width: 24px;
+            height: 24px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(0) invert(0.9);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Initial state for animated elements */
+        .initial-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Animation classes */
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            visibility: visible;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            visibility: visible;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            visibility: visible;
+        }
+
+        /* Animation delays */
+        .delay-0 { animation-delay: 0.1s; }
+        .delay-1 { animation-delay: 0.3s; }
+        .delay-2 { animation-delay: 0.5s; }
+        .delay-3 { animation-delay: 0.7s; }
+        .delay-4 { animation-delay: 0.9s; }
+
+        /* Typewriter animation */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--primary-color) }
+            50% { border-color: transparent }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--primary-color);
+            width: 0;
+            display: inline-block;
+            visibility: hidden;
+            max-width: fit-content;
+        }
+
+        .typewriter.animate {
+            visibility: visible;
+            animation:
+                typing 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+                blink 1s ease-in-out infinite;
+        }
+
+        /* Name animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .name-title {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s;
+        }
+
+        .name-title.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Стили для плавного скролла */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1100;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: translateY(9.5px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: translateY(-9.5px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(10, 25, 47, 0.95);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                margin-top: 1rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .project-card {
+                padding: 1.5rem;
+            }
+
+            .social-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .social-link {
+                width: 45px;
+                height: 45px;
+            }
+
+            .social-link img {
+                width: 22px;
+                height: 22px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding-top: calc(var(--nav-height) + 2rem);
+                min-height: calc(100vh - var(--nav-height));
+            }
+
+            .typewriter {
+                font-size: 0.9rem;
+            }
+
+            @keyframes typing {
+                from { width: 0 }
+                to { width: 140px }
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .project-title {
+                font-size: 1.25rem;
+            }
+
+            .project-description {
+                font-size: 0.9rem;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+            }
+
+            .social-link img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Улучшенные частицы */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(2px);
+            animation: particleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) scale(0);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Стили для новой плашки времени */
+        .time-badge {
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(30, 41, 59, 0.7);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            transform: scale(0.85);
+            transform-origin: left;
+            transition: all 0.3s ease;
+        }
+
+        .time-badge:hover {
+            border-color: rgba(0, 255, 213, 0.3);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .time-label {
+            opacity: 0.8;
+        }
+
+        .time-value {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Стили для контейнера времени */
+        .time-container {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .time-label {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .wakatime-badge {
+            height: 20px;
+            transform: scale(0.9);
+            transform-origin: left;
+            opacity: 0.9;
+            filter: brightness(1.2);
+            transition: all 0.3s ease;
+            /* Обрезаем левую часть SVG, где находится надпись wakatime */
+            clip-path: inset(0 0 0 45%);
+        }
+
+        .wakatime-badge:hover {
+            opacity: 1;
+            filter: brightness(1.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-wrapper"></div>
+    <div class="particles"></div>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo initial-hidden slide-in-left delay-0">sppq</a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><button class="language-switcher" onclick="toggleLanguage()">EN</button></li>
+                <li><a href="#projects" class="initial-hidden slide-in-right delay-1">Проекты</a></li>
+                <li><a href="#contact" class="initial-hidden slide-in-right delay-2">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-subtitle typewriter" data-translate="greeting">Привет, я</span>
+                    <h1>sppq</h1>
+                    <p class="hero-description initial-hidden fade-in-up delay-3" data-translate="description">
+                        Разработчик, создающий небольшие полезные проекты
+                    </p>
+                    <a href="#projects" class="cta-button initial-hidden fade-in-up delay-4" data-translate="view_projects">Посмотреть проекты</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 class="section-title" data-translate="projects">Проекты</h2>
+                <div class="projects-grid">
+                    <article class="project-card">
+                        <h3 class="project-title" data-translate="bot_title">Telegram Бот 'Нейронка'</h3>
+                        <p class="project-description" data-translate="bot_description">
+                            Бот с бесплатным доступом к нейросети Gemini. Ведите диалоги, решайте задачи и получайте информацию прямо в Telegram.
+                        </p>
+                        <div class="project-links">
+                            <a href="https://t.me/resheniefotobot?start=655171833" class="project-link" target="_blank" data-translate="open_bot">Открыть бота</a>
+                            <a href="https://sppqq.github.io/resh_site/" class="project-link" target="_blank" data-translate="learn_more">Подробнее</a>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <h3 class="project-title" data-translate="pccontrol_title">PCControl</h3>
+                        <p class="project-description" data-translate="pccontrol_description">
+                            Программа для удаленного управления компьютерами в локальной сети. Отправка сообщений, выключение, перезагрузка и другие функции.
+                        </p>
+                        <div class="project-links">
+                            <a href="https://github.com/Sppqq/PCControl" class="project-link" target="_blank">GitHub</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title" data-translate="links">Ссылки</h2>
+                <div class="social-links">
+                    <a href="https://github.com/Sppqq" class="social-link" target="_blank" title="GitHub">
+                        <img src="images/github.svg" alt="GitHub">
+                    </a>
+                    <a href="https://sppqgg.t.me" class="social-link" target="_blank" title="Telegram">
+                        <img src="images/telegram.svg" alt="Telegram">
+                    </a>
+                    <a href="https://discord.com/users/758050281320742950" class="social-link" target="_blank" title="Discord">
+                        <img src="images/discord.svg" alt="Discord">
+                    </a>
+                    <a href="https://www.donationalerts.com/r/sppq" class="social-link" target="_blank" title="DonationAlerts">
+                        <img src="images/donationalerts.svg" alt="DonationAlerts">
+                    </a>
+                    <a href="https://boosty.to/sppq" class="social-link" target="_blank" title="Boosty">
+                        <img src="images/boosty.svg" alt="Boosty">
+                    </a>
+                    <a href="https://steamcommunity.com/id/Sppqq/" class="social-link" target="_blank" title="Steam">
+                        <img src="images/steam.svg" alt="Steam">
+                    </a>
+                    <a href="mailto:pizdanahui@duck.com" class="social-link" title="Email">
+                        <img src="images/email.svg" alt="Email">
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p data-translate="copyright">© 2025 sppq. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Улучшенная система частиц
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 30;
+            const particles = [];
+
+            class Particle {
+                constructor() {
+                    this.element = document.createElement('div');
+                    this.element.className = 'particle';
+                    this.reset();
+                    particlesContainer.appendChild(this.element);
+                }
+
+                reset() {
+                    const size = Math.random() * 4 + 2;
+                    this.element.style.width = `${size}px`;
+                    this.element.style.height = `${size}px`;
+                    this.element.style.left = `${Math.random() * window.innerWidth}px`;
+                    this.element.style.top = `${window.innerHeight + 10}px`;
+                    this.element.style.opacity = '0';
+                    this.element.style.transform = 'scale(0) translateY(0)';
+                }
+
+                animate() {
+                    const duration = Math.random() * 2000 + 2000;
+                    const translateX = (Math.random() - 0.5) * 100;
+                    const translateY = -window.innerHeight - 50;
+
+                    this.element.style.transition = `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+                    this.element.style.opacity = '0.5';
+                    this.element.style.transform = `scale(1) translate(${translateX}px, ${translateY}px)`;
+
+                    setTimeout(() => {
+                        this.reset();
+                        setTimeout(() => this.animate(), 100);
+                    }, duration);
+                }
+            }
+
+            // Создаем и анимируем частицы
+            for (let i = 0; i < particleCount; i++) {
+                setTimeout(() => {
+                    const particle = new Particle();
+                    particles.push(particle);
+                    particle.animate();
+                }, i * 300);
+            }
+
+            // Интерактивный фон
+            const backgroundWrapper = document.querySelector('.background-wrapper');
+
+            document.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                const moveX = (clientX - window.innerWidth / 2) * 0.02;
+                const moveY = (clientY - window.innerHeight / 2) * 0.02;
+
+                backgroundWrapper.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+
+            // Интерактивные карточки проектов
+            const cards = document.querySelectorAll('.project-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+
+                    // Обновляем положение градиента
+                    card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+                    card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+
+                    card.style.transform = `
+                        perspective(1000px)
+                        rotateX(${rotateX}deg)
+                        rotateY(${rotateY}deg)
+                        translateZ(10px)
+                        scale(1.02)
+                    `;
+
+                    // Добавляем свечение при наведении
+                    card.style.boxShadow = `
+                        0 10px 30px -15px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 255, 213, 0.2)
+                    `;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+                    card.style.boxShadow = '0 10px 30px -15px rgba(0, 0, 0, 0.5)';
+                });
+            });
+
+            // Улучшенные интерактивные кнопки и ссылки
+            const interactiveElements = document.querySelectorAll('.cta-button, .project-link');
+
+            interactiveElements.forEach(element => {
+                element.addEventListener('mousemove', (e) => {
+                    const rect = element.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // Вычисляем расстояние от курсора до центра элемента
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const distanceX = x - centerX;
+                    const distanceY = y - centerY;
+                    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                    const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
+
+                    // Вычисляем силу свечения в зависимости от расстояния
+                    const glowStrength = 1 - (distance / maxDistance);
+
+                    // Вычисляем углы поворота
+                    const rotationY = (distanceX / centerX) * 10;
+                    const rotationX = -(distanceY / centerY) * 10;
+
+                    // Обновляем CSS переменные
+                    element.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+                    element.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+                    element.style.setProperty('--glow-strength', glowStrength.toFixed(2));
+                    element.style.setProperty('--rotation-x', `${rotationX}deg`);
+                    element.style.setProperty('--rotation-y', `${rotationY}deg`);
+                });
+
+                element.addEventListener('mouseleave', () => {
+                    element.style.setProperty('--glow-strength', '0');
+                    element.style.setProperty('--rotation-x', '0deg');
+                    element.style.setProperty('--rotation-y', '0deg');
+                });
+            });
+
+            // Остальной существующий код...
+            const typewriter = document.querySelector('.typewriter');
+            const nameTitle = document.querySelector('.name-title');
+            const otherElements = document.querySelectorAll('.initial-hidden:not(.typewriter)');
+
+            setTimeout(() => {
+                typewriter.classList.add('animate');
+                setTimeout(() => {
+                    nameTitle.classList.add('show');
+                }, 500);
+                setTimeout(() => {
+                    otherElements.forEach(element => {
+                        element.style.visibility = 'visible';
+                    });
+                }, 1000);
+            }, 300);
+
+            // Анимация текста в проектах
+            const projectDescriptions = document.querySelectorAll('.project-description');
+
+            const typewriterEffect = (element) => {
+                const text = element.textContent.trim();
+                element.textContent = '';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+
+                let i = 0;
+                const type = () => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        requestAnimationFrame(() => setTimeout(type, 20));
+                    }
+                };
+
+                type();
+            };
+
+            const projectObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+                        entry.target.classList.add('typed');
+                        typewriterEffect(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            projectDescriptions.forEach(desc => projectObserver.observe(desc));
+
+            // Улучшенные социальные ссылки с 3D эффектом
+            const socialLinksContainer = document.querySelector('.social-links');
+            const socialLinks = document.querySelectorAll('.social-link');
+
+            // Сброс эффектов при уходе курсора
+            document.addEventListener('mouseleave', () => {
+                socialLinks.forEach(link => {
+                    link.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // Анимация появления элементов при скролле
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    if (!entry.target.classList.contains('initial-hidden')) {
+                        entry.target.classList.add('fade-in-up');
+                        entry.target.style.animationDelay = `${index * 0.1}s`;
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Наблюдаем за всеми элементами, которые должны анимироваться при скролле
+        document.querySelectorAll('.project-card, .section-title, .social-link').forEach(el => {
+            if (!el.classList.contains('initial-hidden')) {
+                el.style.opacity = '0';
+                observer.observe(el);
+            }
+        });
+
+        // Скрытие/показ навигации при скролле
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        const scrollThreshold = 50;
+        let isScrollingUp = false;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll <= scrollThreshold) {
+                header.classList.remove('hidden');
+                return;
+            }
+
+            if (currentScroll > lastScroll && !header.classList.contains('hidden') && !isScrollingUp) {
+                header.classList.add('hidden');
+            } else if (currentScroll < lastScroll && header.classList.contains('hidden')) {
+                isScrollingUp = true;
+                setTimeout(() => {
+                    header.classList.remove('hidden');
+                    isScrollingUp = false;
+                }, 150);
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Плавный скролл к секциям с дополнительной анимацией
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition - headerOffset;
+
+                    window.scrollBy({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Добавляем эффект подсветки для секции
+                    target.style.transition = 'box-shadow 0.3s ease';
+                    target.style.boxShadow = '0 0 0 2px var(--primary-color)';
+                    setTimeout(() => {
+                        target.style.boxShadow = 'none';
+                    }, 1000);
+                }
+            });
+        });
+
+        // Мобильное меню
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const navLinksItems = document.querySelectorAll('.nav-links a');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+
+        navLinksItems.forEach(item => {
+            item.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Функционал смены языка
+        const translations = {
+            en: {
+                greeting: "Hi, I'm",
+                description: "Developer creating small useful projects",
+                view_projects: "View Projects",
+                projects: "Projects",
+                bot_title: "Telegram Bot 'Neural'",
+                bot_description: "Bot with free access to Gemini neural network. Have conversations, solve problems and get information right in Telegram.",
+                open_bot: "Open Bot",
+                learn_more: "Learn More",
+                pccontrol_title: "PCControl",
+                pccontrol_description: "Program for remote control of computers in a local network. Sending messages, shutdown, restart and other functions.",
+                links: "Links",
+                copyright: "© 2025 sppq. All rights reserved."
+            },
+            ru: {
+                greeting: "Привет, я",
+                description: "Разработчик, создающий небольшие полезные проекты",
+                view_projects: "Посмотреть проекты",
+                projects: "Проекты",
+                bot_title: "Telegram Бот 'Нейронка'",
+                bot_description: "Бот с бесплатным доступом к нейросети Gemini. Ведите диалоги, решайте задачи и получайте информацию прямо в Telegram.",
+                open_bot: "Открыть бота",
+                learn_more: "Подробнее",
+                pccontrol_title: "PCControl",
+                pccontrol_description: "Программа для удаленного управления компьютерами в локальной сети. Отправка сообщений, выключение, перезагрузка и другие функции.",
+                links: "Ссылки",
+                copyright: "© 2025 sppq. Все права защищены."
+            }
+        };
+
+        // Получаем сохраненный язык или устанавливаем английский по умолчанию
+        let currentLang = localStorage.getItem('selectedLanguage') || 'en';
+        
+        function toggleLanguage() {
+            const langBtn = document.querySelector('.language-switcher');
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            langBtn.textContent = currentLang.toUpperCase();
+            
+            // Сохраняем выбранный язык
+            localStorage.setItem('selectedLanguage', currentLang);
+            
+            // Обновляем текст на странице
+            updatePageContent();
+        }
+
+        function updatePageContent() {
+            // Обновляем текст на странице согласно выбранному языку
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                
+                // Если это элемент с анимацией печатания
+                if (element.classList.contains('typewriter')) {
+                    element.classList.remove('animate');
+                    element.style.visibility = 'hidden';
+                    element.textContent = translations[currentLang][key];
+                    
+                    // Перезапускаем анимацию
+                    setTimeout(() => {
+                        element.classList.add('animate');
+                        element.style.visibility = 'visible';
+                    }, 100);
+                } else {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+        }
+
+        // Устанавливаем начальный язык при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            const langBtn = document.querySelector('.language-switcher');
+            langBtn.textContent = currentLang.toUpperCase();
+            updatePageContent();
+        });
+    </script>
+</body>
+</html>
